@@ -181,7 +181,7 @@ public class MeritBank {
 	
 	// Existing futureValue methods that used to call Math.pow() should now call this method
 	public static double recursiveFutureValue(double amount, int years, double interestRate) {
-		return 0.0;
+		return amount * (Math.pow(1 + interestRate, years));
 	}
 	
 	public static boolean processTransaction(Transaction transaction) throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException {

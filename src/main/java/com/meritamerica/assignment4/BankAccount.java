@@ -92,7 +92,7 @@ import java.util.Locale;
 			return accountOpenedOn;
 		}
 
-		
+/*
 		public BankAccount writeToFile() throws IOException{
 			
 			// Error here after making BankAccount class abstract
@@ -108,15 +108,12 @@ import java.util.Locale;
 			} catch (IOException ex1) {
 				System.out.println("Error: incorrect input / output!");
 			}
-		// not sure what to return hear
+		// not sure what to return here
 			return obj;
 			
 		}
-/* This is in the right direction I think, I believe what's missing is the conversion of the String accountData into  
- * an instance of BankAccount 
-	*/
-		
-		
+*/
+/*
 		public static BankAccount readFromString(String accountData) throws ParseException {
 			BankAccount bankAcc;
 			try {
@@ -129,6 +126,7 @@ import java.util.Locale;
 			}
 			return bankAcc;
 		}
+*/
 	
 
 		
@@ -139,7 +137,8 @@ import java.util.Locale;
 
 		public double futureValue(int years) {
 
-			return balance * (Math.pow(1 + getInterestRate(), years));
+			// return balance * (Math.pow(1 + getInterestRate(), years));
+			return MeritBank.recursiveFutureValue(balance, years, getInterestRate());
 		}
 
 		public boolean withdraw(double amount) {

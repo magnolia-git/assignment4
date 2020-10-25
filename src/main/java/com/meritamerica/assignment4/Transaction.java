@@ -2,36 +2,43 @@ package com.meritamerica.assignment4;
 
 public abstract class Transaction {
 	
+	BankAccount sourceAccount;
+	BankAccount targetAccount;
+	java.util.Date transactionDate;
+	double amount;
+	String rejectionReason;
+	boolean isProcessed;
+	
 	public BankAccount getSourceAccount() {
-		return null;
+		return sourceAccount;
 	}
 	
 	public void setSourceAccount(BankAccount sourceAccount) {
-		
+		this.sourceAccount = sourceAccount;
 	}
 	
 	public BankAccount getTargetAccount() {
-		return null;
+		return targetAccount;
 	}
 	
 	public void setTargetAccount(BankAccount targetAccount) {
-		
+		this.targetAccount = targetAccount;
 	}
 	
 	public double getAmount() {
-		return 0.0;
+		return amount;
 	}
 	
 	public void setAmount(double amount) {
-		
+		this.amount = amount;
 	}
 	
 	public java.util.Date getTransactionDate() {
-		return null;
+		return this.transactionDate;
 	}
 	
 	public void setTransactionDate(java.util.Date date) {
-		
+		this.transactionDate = date;
 	}
 	
 	public String writeToString() {
@@ -45,19 +52,23 @@ public abstract class Transaction {
 	public abstract void process() throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException;
 	
 	public boolean isProcessedByFraudTeam() {
-		return false;
+		if (this.amount > 1000) {
+			return isProcessed = true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void setProcessedByFraudTeam(boolean isProcessed) {
-		
+		this.isProcessed = isProcessed;
 	}
 	
 	public String getRejectionReason() {
-		return null;
+		return rejectionReason;
 	}
 	
 	public void setRejectionReason(String reason) {
-		
+		this.rejectionReason = reason;
 	}
 
 }
