@@ -10,7 +10,6 @@ package com.meritamerica.assignment4;
 		private CheckingAccount[] checkingAccounts = new CheckingAccount[0];
 		private SavingsAccount[] savingsAccounts = new SavingsAccount[0];
 		private CDAccount[] cdAccounts = new CDAccount[0];
-		private Transaction[] transactions = new Transaction[0];
 		private FraudQueue[] frauds = new FraudQueue[0];
 
 		public AccountHolder(String firstName, String middleName, String lastName, String ssn) {
@@ -45,14 +44,17 @@ package com.meritamerica.assignment4;
  * Returns the addSavingsAccount() method with the newly made account as an argument.
  */
 		
-		public SavingsAccount addSavingsAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException {
+		public SavingsAccount addSavingsAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException, ExceedsFraudSuspicionLimitException {
 			
 			SavingsAccount newname = new SavingsAccount(openingBalance);
-			
+			if (openingBalance > 1000.0) {
+				throw new ExceedsFraudSuspicionLimitException();
+			}
 			if (getCombinedBalance() + openingBalance >= MAX_ALLOWED) {
-				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
+//				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
 				throw new ExceedsCombinedBalanceLimitException();
 			} else {
+				
 				return addSavingsAccount(newname);
 			}
 		}
@@ -62,8 +64,8 @@ package com.meritamerica.assignment4;
  */
 		
 		public SavingsAccount addSavingsAccount(SavingsAccount savingsAccount) throws ExceedsCombinedBalanceLimitException {
-			if(getCombinedBalance() + savingsAccount.getBalance() >= MAX_ALLOWED) {
-				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
+			if (getCombinedBalance() + savingsAccount.getBalance() >= MAX_ALLOWED) {
+
 				throw new ExceedsCombinedBalanceLimitException();
 			} else {
 				SavingsAccount[] newArray = new SavingsAccount[savingsAccounts.length + 1];
@@ -92,25 +94,29 @@ package com.meritamerica.assignment4;
  * Returns the addCheckingAccount() method with the newly made account as an argument.
  */
 		
-		public CheckingAccount addCheckingAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException {
-			CheckingAccount newname = new CheckingAccount(openingBalance);
-			try {
-				if(getCombinedBalance() + openingBalance >= MAX_ALLOWED) {
-					System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
-					throw new ExceedsCombinedBalanceLimitException("You have reached the maximum total balance across all accounts. Cannot create another.");
-				} else {
-					// Just added this as per the Assignment 4 instructions
-					newname.deposit(openingBalance);
-					return addCheckingAccount(newname);
-				}
-			} catch (Exception e) {
-				
+		public CheckingAccount addCheckingAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException, ExceedsFraudSuspicionLimitException {
+			if (openingBalance > 1000.0) {
+				throw new ExceedsFraudSuspicionLimitException();
 			}
-		}
+			CheckingAccount newname = new CheckingAccount(openingBalance);
 
-		public CheckingAccount addCheckingAccount(CheckingAccount checkingAccount) throws ExceedsCombinedBalanceLimitException{
+			if(getCombinedBalance() + openingBalance >= MAX_ALLOWED) {
+//				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
+				throw new ExceedsCombinedBalanceLimitException();
+			} else {
+				// Just added this as per the Assignment 4 instructions
+				//newname.deposit(openingBalance);
+				return addCheckingAccount(newname);
+			}
+		} 
+		
+/* Makes a new array for the checking accounts. It'll be one greater than the already existing array
+ * so that the new checking account can be added to it.
+ */
+
+		public CheckingAccount addCheckingAccount(CheckingAccount checkingAccount) throws ExceedsCombinedBalanceLimitException {
 			if(getCombinedBalance() + checkingAccount.getBalance() >= MAX_ALLOWED) {
-				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
+//				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
 				throw new ExceedsCombinedBalanceLimitException();
 			} else {
 				CheckingAccount[] newArray = new CheckingAccount[checkingAccounts.length + 1];
@@ -118,10 +124,8 @@ package com.meritamerica.assignment4;
 				for (i = 0; i < checkingAccounts.length; i++) {
 					newArray[i] = checkingAccounts[i];
 				}
-			
 				newArray[i] = checkingAccount;
 				checkingAccounts = newArray;
-				System.out.println("Added checking account to array");
 				return checkingAccount;
 			}
 		}
@@ -131,31 +135,34 @@ package com.meritamerica.assignment4;
 		
 
 		for (int i = 0; i < checkingAccounts.length; i++) {
-			System.out.println("CheckingAccount balance number " + i + ": " + checkingAccounts[i].getBalance());
 			checkingBalance = checkingBalance + checkingAccounts[i].getBalance();
-			
 		}
-		System.out.println("Checkingbalance: " + checkingBalance);
 		return checkingBalance;
 	}
-
 	
-	
-
 	public CDAccount[] getCDAccounts() {return cdAccounts;}
 	
 
 	
 	// This first one creates a new CDAccount...
 	
-	public CDAccount addCDAccount(CDOffering offering, double openingBalance) {
-	CDAccount newName = new CDAccount(offering, openingBalance);
-	return addCDAccount(newName);
+	public CDAccount addCDAccount(CDOffering offering, double openingBalance) throws ExceedsFraudSuspicionLimitException {
+		if (openingBalance > 1000.0) {
+			throw new ExceedsFraudSuspicionLimitException();
+		}
+		if (getCombinedBalance() + openingBalance >= MAX_ALLOWED) {
+//			throw new ExceedsCombinedBalanceLimitException("You have reached the maximum total balance across all accounts. Cannot create another.");
+		}
+		CDAccount newName = new CDAccount(offering, openingBalance);
+		return addCDAccount(newName);
 	}
 	
 	// ... and this second one adds it to the CDAccount array.
 	
 	public CDAccount addCDAccount(CDAccount cdAccount) {
+		if (getCombinedBalance() + cdAccount.getBalance() >= MAX_ALLOWED) {
+//			throw new ExceedsCombinedBalanceLimitException("You have reached the maximum total balance across all accounts. Cannot create another.");
+		}
 		CDAccount[] newArray = new CDAccount[cdAccounts.length + 1];
 		int i;
 		for (i = 0; i < cdAccounts.length; i++) {
@@ -173,50 +180,34 @@ package com.meritamerica.assignment4;
 		double sum = 0;
 
 		for (int i = 0; i < cdAccounts.length; i++) {
-			System.out.println("CDAccount balance number " + i + ": " + cdAccounts[i].getBalance());
 			sum += cdAccounts[i].getBalance();
-
 		}
-//		}
-		System.out.println("CDBalance sum: " + sum);
 		return sum;
 	}
 
 
 	public double getCombinedBalance() {
 		double combinedBalance = 0;
-		System.out.println("Combined: " + (getCheckingBalance() + getSavingsBalance() + getCDBalance()));
 		combinedBalance += getCheckingBalance();
 		combinedBalance += getSavingsBalance();
 		combinedBalance += getCDBalance();
-		System.out.println("Combined: " + combinedBalance);
-//		return combinedBalance;
-		return getCheckingBalance() + getSavingsBalance() + getCDBalance();
+		return combinedBalance;
 	}
 
 	public int getNumberOfCheckingAccounts() {
-		System.out.println("Number of checking accounts: " + checkingAccounts.length);
 		return checkingAccounts.length;
 		
 	}
 
 	public int getNumberOfSavingsAccounts() {
-		System.out.println("Number of savings accounts: " + savingsAccounts.length);
 		return savingsAccounts.length;
 	}
 
 	public int getNumberOfCDAccounts() {
-		System.out.println("Number of cd accounts: " + cdAccounts.length);
 			return cdAccounts.length;		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 * 
-	 * returns the state of the object as a string.
-	 */
+
 	@Override
 	public String toString() {
 		return generateStringForToString();
@@ -253,6 +244,8 @@ package com.meritamerica.assignment4;
 		if(this.getCombinedBalance() > otherAccountHolder.getCombinedBalance()) return 1;
 		else return -1;
 	}
+	
+// Outputs to a string: "First,Middle,Last,012345678
 	
 	public String writeToString() {
 		return firstName + "," + middleName + "," + lastName + "," + ssn;

@@ -7,12 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MeritBank {
 
 	private static AccountHolder[] accountHolders;
 	private static CDOffering[] cdOfferings;
+	private static ArrayList<FraudQueue> frauds = new ArrayList<FraudQueue>();
 	static long masterAccountNumber = 000000000;
 
 	public static void addAccountHolder(AccountHolder accountHolder) {
@@ -98,7 +100,11 @@ public class MeritBank {
 				CheckingAccount[] newCheckingAccounts = new CheckingAccount[Integer.valueOf(bufferRead.readLine())];
 				for (int j = 0; j < newCheckingAccounts.length; j++) {
 					newAccountHolders[i].addCheckingAccount(CheckingAccount.readFromString(bufferRead.readLine()));
-
+					ArrayList<Transaction> newTransactions = new ArrayList<Transaction>();
+					for (int k = 0; k < Integer.valueOf(bufferRead.readLine()); k++) {
+						newTransactions.add(Transaction.readFromString(bufferRead.readLine())); 
+					}
+					
 				}
 
 				SavingsAccount[] newSavingsAccounts = new SavingsAccount[Integer.valueOf(bufferRead.readLine())];
@@ -181,28 +187,43 @@ public class MeritBank {
 	
 	// Existing futureValue methods that used to call Math.pow() should now call this method
 	public static double recursiveFutureValue(double amount, int years, double interestRate) {
-		return amount * (Math.pow(1 + interestRate, years));
+		double total = amount;
+		for (int i = years; i > 0; i--) {
+			total *= (1 + interestRate);
+		}
+		return total;
+		
+//		return amount * (Math.pow(1 + interestRate, years));
+//		return amount * recursiveFutureValue(amount,)
 	}
 	
 	public static boolean processTransaction(Transaction transaction) throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException {
-		/*
-		 * If transaction does not violate any constraints, deposit/withdraw values from the relevant BankAccounts and add the transaction to the relevant BankAccounts
-		 * 
-		 * If the transaction violates any of the basic constraints (negative amount, exceeds available balance) the relevant exception should be thrown and the processing should terminate
-		 * 
-		 * If the transaction violates the $1,000 suspicion limit, it should simply be added to the FraudQueue for future processing
-		 * 
-		 */
-		return false;
+
+		try {
+			transaction.process();
+//			return true;
+		} catch (NegativeAmountException e) {
+			System.out.println("Negative exception");
+			throw e;
+		} catch (ExceedsAvailableBalanceException e) {
+			System.out.println("Exceeds balance");
+			throw e;
+		} catch (ExceedsFraudSuspicionLimitException e) {
+			System.out.println("Fraud limit");
+			throw e;
+		}
+		return true;
 	}
 	
 	public static FraudQueue getFraudQueue() {
-		return null;
+		return frauds.get(0);
 	}
 	
 	// Return null if account not found
-	public static BankAccount getBankAccount(long accountId) {
-		return null;
-	}
+//	public static BankAccount getBankAccount(long accountId) {
+//		for (int i = 0; i < accountHolders.length; i++) {
+			
+//		}
+//	}
 
 }

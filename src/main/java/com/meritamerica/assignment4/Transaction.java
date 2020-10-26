@@ -1,5 +1,8 @@
 package com.meritamerica.assignment4;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public abstract class Transaction {
 	
 	BankAccount sourceAccount;
@@ -8,6 +11,7 @@ public abstract class Transaction {
 	double amount;
 	String rejectionReason;
 	boolean isProcessed;
+	
 	
 	public BankAccount getSourceAccount() {
 		return sourceAccount;
@@ -46,27 +50,33 @@ public abstract class Transaction {
 	}
 	
 	public static Transaction readFromString(String transactionDataString) {
-		return null;
+		Transaction trans;
+		ArrayList<String> aL = new ArrayList<>(Arrays.asList(transactionDataString.split(",")));
+		trans = new Transaction();
 	}
 	
 	public abstract void process() throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException;
 	
+	
+	// Checks if it's been processed by the fraud team yet
 	public boolean isProcessedByFraudTeam() {
-		if (this.amount > 1000) {
-			return isProcessed = true;
+		if (isProcessed == true) {
+			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	// Marks the transaction as processed by the fraud team
 	public void setProcessedByFraudTeam(boolean isProcessed) {
-		this.isProcessed = isProcessed;
+		this.isProcessed = true;
 	}
 	
 	public String getRejectionReason() {
 		return rejectionReason;
 	}
 	
+	// Gets string, maybe specified by user or something
 	public void setRejectionReason(String reason) {
 		this.rejectionReason = reason;
 	}

@@ -38,8 +38,8 @@ import java.text.SimpleDateFormat;
 		public long getAccountNumber() {return accountNumber;}
 	
 		public double futureValue() {
-//			return futureValue(this.offering.getTerm());
-			return getBalance() * (Math.pow(1 + getInterestRate(), getTerm()));
+			return MeritBank.recursiveFutureValue(getBalance(), getTerm(), getInterestRate());
+//			return getBalance() * (Math.pow(1 + getInterestRate(), getTerm()));
 		}
 		
 		@Override

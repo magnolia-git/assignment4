@@ -7,17 +7,19 @@ public class WithdrawTransaction extends Transaction {
 		this.amount = amount;
 	}
 	
-	public void process() {
-		try {
-			if (amount  <= 0) throw new NegativeAmountException("Error: cannot withdraw a negative amount!");
-			if (targetAccount.getBalance() < amount) throw new ExceedsAvailableBalanceException("Error: amount being withdrawn exceeds current funds!");
-			else targetAccount.withdraw(amount);
-			
-		} catch (NegativeAmountException e) {
-			System.out.println(e);
-		} catch (ExceedsAvailableBalanceException e) {
-			System.out.println(e);
+	public void process() throws ExceedsAvailableBalanceException, NegativeAmountException, ExceedsFraudSuspicionLimitException {
+
+		if (amount <= 0.0) {
+			throw new NegativeAmountException();
 		}
+		else if (amount > targetAccount.getBalance()) {
+			throw new ExceedsAvailableBalanceException();
+		}
+		else if (amount > 1000) {
+			FraudQueue.addTransaction(this);
+			throw new ExceedsFraudSuspicionLimitException();
+		}
+		else targetAccount.withdraw(amount);
 	}
 	
 }
