@@ -17,35 +17,31 @@ import java.util.Locale;
 	public abstract class BankAccount {
 		public double interestRate = 0;
 		private double balance = 0;
-		protected static long accountNumber = 0;
+		public static long accountNumber;
 		private static java.util.Date accountOpenedOn;
 		static private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		private List<Transaction> transactions = new ArrayList<Transaction>();
 
-		public BankAccount() {
-			accountNumber++;
-		}
-
 		public BankAccount(double openingBalance) {
-			accountNumber++;
+			this.accountNumber = MeritBank.getNextAccountNumber();
 			this.balance = openingBalance;
 			this.interestRate = getInterestRate();
 		}
 
 		public BankAccount(double interestRate, double balance) {
-			accountNumber++;
+			this.accountNumber = MeritBank.getNextAccountNumber();
 			this.balance = balance;
 			this.interestRate = interestRate;
 		}
 
 		public BankAccount(long accountNumber, double interestRate, double balance) {
-			accountNumber++;
-			BankAccount.accountNumber = accountNumber;
+			this.accountNumber = accountNumber;
 			this.balance = balance;
+			this.interestRate = interestRate;
 		}
 
 		public BankAccount(double interestRate, double balance, java.util.Date accountOpenedOn) {
-			accountNumber++;
+			this.accountNumber = accountNumber;
 			this.interestRate = interestRate;
 			this.balance = balance;
 			this.accountOpenedOn = accountOpenedOn;
@@ -53,7 +49,7 @@ import java.util.Locale;
 		}
 
 		public BankAccount(long accountNumber, double balance, double interestRate, Date accountOpenedOn) {
-			this.accountNumber = accountNumber++;
+			this.accountNumber = accountNumber;
 			this.interestRate = interestRate;
 			this.balance = balance;
 			this.accountOpenedOn = accountOpenedOn;
@@ -61,7 +57,7 @@ import java.util.Locale;
 
 		public BankAccount(long accountNumber, double balance, double interestRate, Date accountOpenedOn,
 				int term) {
-			accountNumber = accountNumber++;
+			this.accountNumber = accountNumber;
 			this.balance = balance;
 			this.interestRate = interestRate;
 			this.accountOpenedOn = accountOpenedOn;
@@ -127,7 +123,7 @@ import java.util.Locale;
 		}
 
 		public long getAccountNumber() {
-			return accountNumber++;
+			return this.accountNumber;
 		}
 		
 		public String toString() {

@@ -24,6 +24,7 @@ public class CDOffering {
 		public static CDOffering readFromString(String cdOfferingDataString) {
 			CDOffering cdOff;
 			ArrayList<String> aL = new ArrayList<>(Arrays.asList(cdOfferingDataString.split(",")));
+//			System.out.println(aL.get(0) + "," + aL.get(1));
 			cdOff = new CDOffering(Integer.parseInt(aL.get(0)), Double.parseDouble(aL.get(1)));
 			return cdOff;
 		}

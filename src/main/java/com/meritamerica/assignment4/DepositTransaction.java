@@ -7,7 +7,7 @@ public class DepositTransaction extends Transaction {
 		this.isProcessed = false;
 	}
 	
-	public void process() throws ExceedsAvailableBalanceException, NegativeAmountException, ExceedsFraudSuspicionLimitException{
+	public void process() throws ExceedsAvailableBalanceException, NegativeAmountException, ExceedsFraudSuspicionLimitException {
 
 		if (amount <= 0.0) {
 			throw new NegativeAmountException();

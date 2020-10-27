@@ -54,7 +54,7 @@ package com.meritamerica.assignment4;
 //				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
 				throw new ExceedsCombinedBalanceLimitException();
 			} else {
-				
+				DepositTransaction depositTransaction = new DepositTransaction(newname, openingBalance);
 				return addSavingsAccount(newname);
 			}
 		}
@@ -104,8 +104,8 @@ package com.meritamerica.assignment4;
 //				System.out.println("You have reached the maximum total balance across all accounts. Cannot create another.");
 				throw new ExceedsCombinedBalanceLimitException();
 			} else {
-				// Just added this as per the Assignment 4 instructions
-				//newname.deposit(openingBalance);
+
+				DepositTransaction depositTransaction = new DepositTransaction(newname, openingBalance);
 				return addCheckingAccount(newname);
 			}
 		} 
@@ -154,6 +154,8 @@ package com.meritamerica.assignment4;
 //			throw new ExceedsCombinedBalanceLimitException("You have reached the maximum total balance across all accounts. Cannot create another.");
 		}
 		CDAccount newName = new CDAccount(offering, openingBalance);
+		DepositTransaction depositTransaction = new DepositTransaction(newName, openingBalance);
+//		transactions.add
 		return addCDAccount(newName);
 	}
 	
@@ -252,9 +254,7 @@ package com.meritamerica.assignment4;
 	}
 	
 	public static AccountHolder readFromString(String accountHolderData) throws Exception {
-		System.out.println("reading from string in account holder.");
 		String[] str = accountHolderData.split(",");
-		System.out.println(str[0] + str[1] + str[2] + str[3]);
 		return new AccountHolder(str[0],str[1], str[2], str[3]);
 	}
 	

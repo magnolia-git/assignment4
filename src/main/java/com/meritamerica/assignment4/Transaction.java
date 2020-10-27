@@ -1,5 +1,7 @@
 package com.meritamerica.assignment4;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,6 +13,7 @@ public abstract class Transaction {
 	double amount;
 	String rejectionReason;
 	boolean isProcessed;
+	static private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	
 	
 	public BankAccount getSourceAccount() {
@@ -49,10 +52,29 @@ public abstract class Transaction {
 		return null;
 	}
 	
-	public static Transaction readFromString(String transactionDataString) {
+	public static Transaction readFromString(String transactionDataString) throws ParseException {
 		Transaction trans;
-		ArrayList<String> aL = new ArrayList<>(Arrays.asList(transactionDataString.split(",")));
-		trans = new Transaction();
+		try {
+			ArrayList<String> aL = new ArrayList<>(Arrays.asList(transactionDataString.split(",")));
+			if (aL.get(0).equals("-1")) {
+				if (Double.parseDouble(aL.get(2)) > 0) {
+				
+					trans = new DepositTransaction(MeritBank.getBankAccount(Long.parseLong(aL.get(1))), Double.parseDouble(aL.get(2)));
+					trans.setTransactionDate(dateFormat.parse(aL.get(3)));
+					return trans;
+				} else {
+					trans = new WithdrawTransaction(MeritBank.getBankAccount(Long.parseLong(aL.get(1))), Math.abs(Double.parseDouble(aL.get(2))));
+					trans.setTransactionDate(dateFormat.parse(aL.get(3)));
+					return trans;
+				}
+			} else {
+				trans = new TransferTransaction(MeritBank.getBankAccount(Long.parseLong(aL.get(0))), MeritBank.getBankAccount(Long.parseLong(aL.get(1))), Math.abs(Double.parseDouble(aL.get(2))));
+				trans.setTransactionDate(dateFormat.parse(aL.get(3)));
+				return trans;
+			}
+		} catch (ParseException e) {
+			throw new java.lang.NumberFormatException();
+		}
 	}
 	
 	public abstract void process() throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException;
